@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { Button } from "./ui/button";
 
 const SideBar = () => {
   return (
@@ -33,9 +34,9 @@ const SideBar = () => {
 
       {/* Logout Button */}
       <div className="p-4 border-t border-gray-700">
-        <button className="w-full text-black py-2 px-4 rounded bg-white hover:bg-slate-100">
+        <Button className="w-full text-black py-2 px-4 rounded bg-white hover:bg-slate-100">
           Logout
-        </button>
+        </Button>
       </div>
     </div>
   );
