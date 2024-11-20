@@ -1,13 +1,16 @@
 import { toast } from "react-hot-toast";
 
 const apiHelper = async (
-  request: Promise<any> // The actual API call (axios promise)
+  request: Promise<any>, // The actual API call (axios promise)
+  showAlert: boolean = false
 ) => {
   try {
     const response = await request;
 
     const successMessage = response?.data?.message || "Request was successful!";
-    toast.success(successMessage);
+    if (showAlert) {
+      toast.success(successMessage);
+    }
     return response.data;
   } catch (error: any) {
     const errorMessage =
