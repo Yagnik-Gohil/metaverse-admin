@@ -7,6 +7,7 @@ import Map from "./pages/Map";
 import Admin from "./pages/Admin";
 import Login from "./pages/Login";
 import { Toaster } from "react-hot-toast";
+import MapDetails from "./pages/MapDetails";
 
 function App() {
   const location = useLocation();
@@ -25,6 +26,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/user" element={<User />} />
           <Route path="/map" element={<Map />} />
+          <Route path="/map/:id" element={<MapDetails />} />
           <Route path="/admin" element={<Admin />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
