@@ -1,3 +1,4 @@
+import { createMap } from "@/api/map.service";
 import { uploadImage } from "@/api/upload.service";
 import EditableJsonArray from "@/components/EditableJsonArray";
 import { Button } from "@/components/ui/button";
@@ -13,6 +14,7 @@ import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 import { z } from "zod";
 
 const formSchema = z.object({
@@ -28,6 +30,7 @@ const formSchema = z.object({
 const MapDetails = () => {
   const [uploadingTileSet, setUploadingTileSet] = useState(false);
   const [uploadingThumbnail, setUploadingThumbnail] = useState(false);
+  const navigate = useNavigate();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -50,7 +53,7 @@ const MapDetails = () => {
       const file = e.target.files[0];
       const result = await uploadImage(file, "tileset");
       if (result.status) {
-        form.setValue("tile_set", result.data.name);
+        form.setValue("tile_set", result.data.id);
       }
       setUploadingTileSet(false);
     }
@@ -64,14 +67,17 @@ const MapDetails = () => {
       const file = e.target.files[0];
       const result = await uploadImage(file, "thumbnail");
       if (result.status) {
-        form.setValue("thumbnail", result.data.name);
+        form.setValue("thumbnail", result.data.id);
       }
       setUploadingThumbnail(false);
     }
   };
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log("Submitted values:", values);
+  async function onSubmit(data: z.infer<typeof formSchema>) {
+    const result = await createMap(data);
+    if (result.status) {
+      navigate("/map");
+    }
   }
 
   return (
@@ -91,7 +97,11 @@ const MapDetails = () => {
                   <FormItem>
                     <FormLabel>Row</FormLabel>
                     <FormControl>
-                      <Input {...field} type="number" onChange={(e) => field.onChange(Number(e.target.value))}/>
+                      <Input
+                        {...field}
+                        type="number"
+                        onChange={(e) => field.onChange(Number(e.target.value))}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -104,7 +114,11 @@ const MapDetails = () => {
                   <FormItem>
                     <FormLabel>Column</FormLabel>
                     <FormControl>
-                      <Input {...field} type="number" onChange={(e) => field.onChange(Number(e.target.value))} />
+                      <Input
+                        {...field}
+                        type="number"
+                        onChange={(e) => field.onChange(Number(e.target.value))}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -117,7 +131,11 @@ const MapDetails = () => {
                   <FormItem>
                     <FormLabel>Tile Size</FormLabel>
                     <FormControl>
-                      <Input {...field} type="number" onChange={(e) => field.onChange(Number(e.target.value))} />
+                      <Input
+                        {...field}
+                        type="number"
+                        onChange={(e) => field.onChange(Number(e.target.value))}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
