@@ -18,6 +18,7 @@ import { useNavigate } from "react-router-dom";
 import { z } from "zod";
 
 const formSchema = z.object({
+  name: z.string().min(5).max(50),
   row: z.number().min(10).max(50),
   column: z.number().min(10).max(100),
   tile_size: z.number().min(10).max(100),
@@ -90,6 +91,21 @@ const MapDetails = () => {
           >
             {/* Row, Column, and Tile Size */}
             <div className="flex gap-4">
+            <FormField
+                control={form.control}
+                name="name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Name</FormLabel>
+                    <FormControl>
+                      <Input
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
               <FormField
                 control={form.control}
                 name="row"

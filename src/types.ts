@@ -15,3 +15,21 @@ export interface MapPayload {
   tile_set: string;
   thumbnail: string;
 }
+
+export interface IMap {
+  id: string;
+  created_at: string;
+  name: string;
+  row: number;
+  column: number;
+  tile_size: number;
+  thumbnail: {
+    id: string;
+    created_at: string;
+    base_url: string;
+    root: string;
+    folder: string;
+    name: string;
+    status: string;
+  };
+}

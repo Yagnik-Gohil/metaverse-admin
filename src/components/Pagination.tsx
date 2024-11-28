@@ -26,6 +26,10 @@ const Pagination = ({
 }) => {
   const recordsPerPageOptions = [5, 10, 15, 20];
 
+  // Calculate the range of items being displayed
+  const start = total === 0 ? 0 : offset + 1;
+  const end = Math.min(offset + limit, total);
+
   return (
     <div className="flex justify-between items-center mt-4 p-4 gap-4 font-medium border border-gray-300 rounded-lg shadow-md bg-white absolute right-5 bottom-5">
       <div className="flex items-center space-x-2">
@@ -65,7 +69,9 @@ const Pagination = ({
         </Button>
       </div>
 
-      <div className="text-gray-700 font-medium">Total: {total}</div>
+      <div className="text-gray-700 font-medium">
+        {total > 0 ? `Showing ${start} to ${end} of ${total} entries` : "No entries to display"}
+      </div>
     </div>
   );
 };

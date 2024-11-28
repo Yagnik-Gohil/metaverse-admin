@@ -3,8 +3,15 @@ import apiHelper from "./apiHelper";
 import axiosInstance from "./axiosInstance";
 
 // Get map data
-export const getMapData = async () => {
-  return apiHelper(axiosInstance.get("/map/get"));
+export const getMapList = async (limit: number = 10, offset: number = 0) => {
+  return apiHelper(
+    axiosInstance.get("/map", {
+      params: {
+        limit,
+        offset,
+      },
+    })
+  );
 };
 
 // Get map data by ID
