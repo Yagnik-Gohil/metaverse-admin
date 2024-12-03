@@ -24,8 +24,12 @@ const formSchema = z.object({
   tile_size: z.number().min(10).max(100),
   layers: z.array(z.array(z.number().min(0))).min(1),
   solid_tile: z.array(z.number().min(0)),
-  tile_set: z.string(),
-  thumbnail: z.string(),
+  tile_set: z.string().uuid({
+    message: "Please upload tile set",
+  }),
+  thumbnail: z.string().uuid({
+    message: "Please upload Thumbnail",
+  }),
 });
 
 const MapDetails = () => {
@@ -36,6 +40,7 @@ const MapDetails = () => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
+      name: "",
       row: 10,
       column: 10,
       tile_size: 64,
@@ -82,84 +87,92 @@ const MapDetails = () => {
   }
 
   return (
-    <div className="flex flex-col">
-      <div>
+    <div className="flex h-full justify-center items-center bg-gray-50">
+      <div className="w-full max-w-4xl bg-white shadow-md rounded-lg p-8">
+        <h1 className="text-2xl font-bold mb-6 text-gray-800">
+          Create a New Map
+        </h1>
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
-            className="flex flex-col gap-4 p-4 rounded-md border"
+            className="grid grid-cols-1 md:grid-cols-2 gap-6"
           >
-            {/* Row, Column, and Tile Size */}
-            <div className="flex gap-4">
+            {/* Name */}
             <FormField
-                control={form.control}
-                name="name"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Name</FormLabel>
-                    <FormControl>
-                      <Input
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="row"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Row</FormLabel>
-                    <FormControl>
-                      <Input
-                        {...field}
-                        type="number"
-                        onChange={(e) => field.onChange(Number(e.target.value))}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="column"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Column</FormLabel>
-                    <FormControl>
-                      <Input
-                        {...field}
-                        type="number"
-                        onChange={(e) => field.onChange(Number(e.target.value))}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="tile_size"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Tile Size</FormLabel>
-                    <FormControl>
-                      <Input
-                        {...field}
-                        type="number"
-                        onChange={(e) => field.onChange(Number(e.target.value))}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
+              control={form.control}
+              name="name"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Map Name</FormLabel>
+                  <FormControl>
+                    <Input {...field} placeholder="Enter map name" />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-            {/* Editable JSON for Layers */}
+            {/* Row */}
+            <FormField
+              control={form.control}
+              name="row"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Rows</FormLabel>
+                  <FormControl>
+                    <Input
+                      {...field}
+                      type="number"
+                      placeholder="Number of rows"
+                      onChange={(e) => field.onChange(Number(e.target.value))}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            {/* Column */}
+            <FormField
+              control={form.control}
+              name="column"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Columns</FormLabel>
+                  <FormControl>
+                    <Input
+                      {...field}
+                      type="number"
+                      placeholder="Number of columns"
+                      onChange={(e) => field.onChange(Number(e.target.value))}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            {/* Tile Size */}
+            <FormField
+              control={form.control}
+              name="tile_size"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Tile Size</FormLabel>
+                  <FormControl>
+                    <Input
+                      {...field}
+                      type="number"
+                      placeholder="Tile size in pixels"
+                      onChange={(e) => field.onChange(Number(e.target.value))}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            {/* Layers */}
             <FormField
               control={form.control}
               name="layers"
@@ -178,7 +191,7 @@ const MapDetails = () => {
               )}
             />
 
-            {/* Editable JSON for Solid Tiles */}
+            {/* Solid Tiles */}
             <FormField
               control={form.control}
               name="solid_tile"
@@ -197,60 +210,68 @@ const MapDetails = () => {
               )}
             />
 
-            {/* Tile Set and Thumbnail */}
-            <div className="flex gap-4">
-              <FormField
-                control={form.control}
-                name="tile_set"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Tile Set</FormLabel>
-                    <FormControl>
-                      <input
-                        type="file"
-                        onChange={handleTileSetUpload}
-                        disabled={uploadingTileSet}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                    {uploadingTileSet && <p>Uploading...</p>}
-                    {field.value && (
-                      <p className="text-sm text-gray-600">
-                        Uploaded: {field.value}
-                      </p>
-                    )}
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="thumbnail"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Thumbnail</FormLabel>
-                    <FormControl>
-                      <input
-                        type="file"
-                        onChange={handleThumbnailUpload}
-                        disabled={uploadingThumbnail}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                    {uploadingThumbnail && <p>Uploading...</p>}
-                    {field.value && (
-                      <p className="text-sm text-gray-600">
-                        Uploaded: {field.value}
-                      </p>
-                    )}
-                  </FormItem>
-                )}
-              />
-            </div>
+            {/* Tile Set */}
+            <FormField
+              control={form.control}
+              name="tile_set"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Tile Set</FormLabel>
+                  <FormControl>
+                    <input
+                      type="file"
+                      onChange={handleTileSetUpload}
+                      disabled={uploadingTileSet}
+                      className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:border file:rounded file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                  {uploadingTileSet && (
+                    <p className="text-sm text-blue-500">Uploading...</p>
+                  )}
+                  {field.value && (
+                    <p className="text-sm text-gray-600">
+                      Uploaded: {field.value}
+                    </p>
+                  )}
+                </FormItem>
+              )}
+            />
+
+            {/* Thumbnail */}
+            <FormField
+              control={form.control}
+              name="thumbnail"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Thumbnail</FormLabel>
+                  <FormControl>
+                    <input
+                      type="file"
+                      onChange={handleThumbnailUpload}
+                      disabled={uploadingThumbnail}
+                      className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:border file:rounded file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                  {uploadingThumbnail && (
+                    <p className="text-sm text-blue-500">Uploading...</p>
+                  )}
+                  {field.value && (
+                    <p className="text-sm text-gray-600">
+                      Uploaded: {field.value}
+                    </p>
+                  )}
+                </FormItem>
+              )}
+            />
 
             {/* Submit Button */}
-            <Button type="submit" className="mt-4">
-              Submit
-            </Button>
+            <div className="col-span-1 md:col-span-2 flex justify-end">
+              <Button type="submit" className="w-full md:w-auto px-8">
+                Submit
+              </Button>
+            </div>
           </form>
         </Form>
       </div>
