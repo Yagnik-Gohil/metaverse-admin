@@ -16,9 +16,17 @@ export const getMapList = async (limit: number = 10, offset: number = 0) => {
 
 // Get map data by ID
 export const getMapDataById = async (id: string) => {
-  return apiHelper(axiosInstance.get(`/map/get/${id}`));
+  return apiHelper(axiosInstance.get(`/map/${id}`));
 };
 
 export const createMap = async (data: MapPayload) => {
   return apiHelper(axiosInstance.post("/map", data));
+};
+
+export const updateMap = async (id: string, data: MapPayload) => {
+  return apiHelper(axiosInstance.patch(`/map/${id}`, data));
+};
+
+export const deleteMap = async (id: string) => {
+  return apiHelper(axiosInstance.delete(`/map/${id}`));
 };

@@ -1,4 +1,4 @@
-import { createMap } from "@/api/map.service";
+import { createMap, deleteMap, getMapDataById, updateMap } from "@/api/map.service";
 import { uploadImage } from "@/api/upload.service";
 import EditableJsonArray from "@/components/EditableJsonArray";
 import { Button } from "@/components/ui/button";
@@ -10,11 +10,23 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { Input } from "@/components/ui/input";
+import { IMapDetails } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { z } from "zod";
 
 const formSchema = z.object({
@@ -35,7 +47,10 @@ const formSchema = z.object({
 const MapDetails = () => {
   const [uploadingTileSet, setUploadingTileSet] = useState(false);
   const [uploadingThumbnail, setUploadingThumbnail] = useState(false);
+  const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+
+  const isEdit = id !== "create";
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -50,6 +65,29 @@ const MapDetails = () => {
       thumbnail: "",
     },
   });
+
+  useEffect(() => {
+    if (isEdit && id) {
+      const fetchMapData = async () => {
+        const response = await getMapDataById(id);
+        if (response.status) {
+          const data: IMapDetails = response.data;
+          form.reset({
+            name: data.name,
+            row: data.row,
+            column: data.column,
+            tile_size: data.tile_size,
+            layers: data.layers,
+            solid_tile: data.solid_tile,
+            tile_set: data.tile_set.id,
+            thumbnail: data.thumbnail.id,
+          }); // Pre populate the form with map data
+        }
+      };
+
+      fetchMapData(); // Call the async function
+    }
+  }, [isEdit, id, form]);
 
   const handleTileSetUpload = async (
     e: React.ChangeEvent<HTMLInputElement>
@@ -80,17 +118,27 @@ const MapDetails = () => {
   };
 
   async function onSubmit(data: z.infer<typeof formSchema>) {
-    const result = await createMap(data);
+    const apiCall = isEdit ? updateMap(id!, data) : createMap(data);
+    const result = await apiCall;
     if (result.status) {
       navigate("/map");
     }
   }
 
+  const handleDelete = async () => {
+    if (id) {
+      const result = await deleteMap(id);
+      if (result.status) {
+        navigate("/map");
+      }
+    }
+  };
+
   return (
     <div className="flex h-full justify-center items-center bg-gray-50">
       <div className="w-full max-w-4xl bg-white shadow-md rounded-lg p-8">
         <h1 className="text-2xl font-bold mb-6 text-gray-800">
-          Create a New Map
+          {isEdit ? "Edit Map" : "Create a New Map"}
         </h1>
         <Form {...form}>
           <form
@@ -267,10 +315,33 @@ const MapDetails = () => {
             />
 
             {/* Submit Button */}
-            <div className="col-span-1 md:col-span-2 flex justify-end">
+            <div className="col-span-1 md:col-span-2 flex justify-end gap-2">
               <Button type="submit" className="w-full md:w-auto px-8">
-                Submit
+                {isEdit ? "Update" : "Create"}
               </Button>
+
+              {isEdit && (
+                <AlertDialog>
+                  <AlertDialogTrigger>
+                    <Button type="button">Delete</Button>
+                  </AlertDialogTrigger>
+                  <AlertDialogContent>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>
+                        Are you absolutely sure?
+                      </AlertDialogTitle>
+                      <AlertDialogDescription>
+                        This action cannot be undone. This will permanently
+                        delete map details.
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel>Cancel</AlertDialogCancel>
+                      <AlertDialogAction onClick={handleDelete}>Delete</AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
+              )}
             </div>
           </form>
         </Form>

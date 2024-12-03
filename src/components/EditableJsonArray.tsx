@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 type EditableJsonProps = {
   label: string;
@@ -14,6 +14,11 @@ const EditableJsonArray: React.FC<EditableJsonProps> = ({
     JSON.stringify(value, null, 2)
   );
   const [error, setError] = useState<string | null>(null);
+
+  // Sync textValue with the value prop when it changes
+  useEffect(() => {
+    setTextValue(JSON.stringify(value, null, 2));
+  }, [value]);
 
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const inputValue = e.target.value;

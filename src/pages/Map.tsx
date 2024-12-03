@@ -37,8 +37,7 @@ const Map = () => {
   };
 
   const handleMapClick = (id: string) => {
-    console.log("Map clicked:", id);
-    // Add your navigation or logic here
+    navigate(`/map/${id}`);
   };
 
   return (

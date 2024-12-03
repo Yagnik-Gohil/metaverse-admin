@@ -33,3 +33,24 @@ export interface IMap {
     status: string;
   };
 }
+export interface IMapDetails {
+  id: string;
+  created_at: string;
+  name: string;
+  row: number;
+  column: number;
+  tile_size: number;
+  layers: number[][];
+  solid_tile: number[];
+  thumbnail: ThumbnailOrTileSet;
+  tile_set: ThumbnailOrTileSet;
+}
+export interface ThumbnailOrTileSet {
+  id: string;
+  created_at: string;
+  base_url: string;
+  root: string;
+  folder: string;
+  name: string;
+  status: string;
+}
