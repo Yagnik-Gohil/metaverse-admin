@@ -42,10 +42,10 @@ export interface IMapDetails {
   tile_size: number;
   layers: number[][];
   solid_tile: number[];
-  thumbnail: ThumbnailOrTileSet;
-  tile_set: ThumbnailOrTileSet;
+  thumbnail: IAsset;
+  tile_set: IAsset;
 }
-export interface ThumbnailOrTileSet {
+export interface IAsset {
   id: string;
   created_at: string;
   base_url: string;
@@ -53,4 +53,16 @@ export interface ThumbnailOrTileSet {
   folder: string;
   name: string;
   status: string;
+}
+
+export interface IAvatar {
+  id: string;
+  tile_size: number;
+  image: string;
+  users: number;
+}
+
+export interface IAvatarPayload {
+  image: string;
+  tile_size: number;
 }

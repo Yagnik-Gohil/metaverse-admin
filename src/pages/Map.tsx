@@ -60,7 +60,7 @@ const Map = () => {
               map.thumbnail.name
             }
             title={map.name}
-            details={`${map.row}x${map.column} | Tile Size: ${map.tile_size}`}
+            details={`${map.row}x${map.column} | Tile Size: ${map.tile_size} px`}
             onClick={() => handleMapClick(map.id)}
           />
         ))}

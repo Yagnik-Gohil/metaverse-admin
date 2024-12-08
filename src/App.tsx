@@ -8,6 +8,8 @@ import Admin from "./pages/Admin";
 import Login from "./pages/Login";
 import { Toaster } from "react-hot-toast";
 import MapDetails from "./pages/MapDetails";
+import Avatar from "./pages/Avatar";
+import AvatarDetails from "./pages/AvatarDetails";
 
 function App() {
   const location = useLocation();
@@ -28,6 +30,8 @@ function App() {
           <Route path="/map" element={<Map />} />
           <Route path="/map/:id" element={<MapDetails />} />
           <Route path="/admin" element={<Admin />} />
+          <Route path="/avatar" element={<Avatar />} />
+          <Route path="/avatar/:id" element={<AvatarDetails />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </div>

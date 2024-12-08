@@ -145,7 +145,6 @@ const MapDetails = () => {
             onSubmit={form.handleSubmit(onSubmit)}
             className="grid grid-cols-1 md:grid-cols-2 gap-6"
           >
-            {/* Name */}
             <FormField
               control={form.control}
               name="name"
@@ -160,7 +159,6 @@ const MapDetails = () => {
               )}
             />
 
-            {/* Row */}
             <FormField
               control={form.control}
               name="row"
@@ -180,7 +178,6 @@ const MapDetails = () => {
               )}
             />
 
-            {/* Column */}
             <FormField
               control={form.control}
               name="column"
@@ -200,7 +197,6 @@ const MapDetails = () => {
               )}
             />
 
-            {/* Tile Size */}
             <FormField
               control={form.control}
               name="tile_size"
@@ -220,7 +216,6 @@ const MapDetails = () => {
               )}
             />
 
-            {/* Layers */}
             <FormField
               control={form.control}
               name="layers"
@@ -239,7 +234,6 @@ const MapDetails = () => {
               )}
             />
 
-            {/* Solid Tiles */}
             <FormField
               control={form.control}
               name="solid_tile"
@@ -258,7 +252,6 @@ const MapDetails = () => {
               )}
             />
 
-            {/* Tile Set */}
             <FormField
               control={form.control}
               name="tile_set"
@@ -286,7 +279,6 @@ const MapDetails = () => {
               )}
             />
 
-            {/* Thumbnail */}
             <FormField
               control={form.control}
               name="thumbnail"
@@ -314,7 +306,6 @@ const MapDetails = () => {
               )}
             />
 
-            {/* Submit Button */}
             <div className="col-span-1 md:col-span-2 flex justify-end gap-2">
               <Button type="submit" className="w-full md:w-auto px-8">
                 {isEdit ? "Update" : "Create"}

@@ -2,6 +2,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { Button } from "./ui/button";
 import { logout } from "@/api/auth.service";
 import { FaCircleUser, FaCrown, FaMap } from "react-icons/fa6";
+import { RiShieldUserFill } from "react-icons/ri";
 
 const SideBar = () => {
   const navigate = useNavigate();
@@ -46,6 +47,20 @@ const SideBar = () => {
             <FaMap size={18} />
             <span>Map</span>
           </NavLink>
+
+          <NavLink
+            style={{ textDecoration: "none", color: "white" }}
+            to={"/avatar"}
+            className={({ isActive }) =>
+              `p-2 rounded flex items-center gap-4 ${
+                isActive ? "bg-blue-600" : "hover:bg-gray-700"
+              }`
+            }
+          >
+            <RiShieldUserFill size={18} />
+            <span>Avatar</span>
+          </NavLink>
+
           <NavLink
             
             style={{ textDecoration: "none", color: "white" }}
